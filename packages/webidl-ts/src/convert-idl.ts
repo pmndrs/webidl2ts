@@ -341,24 +341,35 @@ function convertArgument(idl: webidl2.Argument) {
   return ts.factory.createParameterDeclaration([], undefined, idl.name, optional, convertType(idl.idlType))
 }
 
+function makeFinalType(type: ts.TypeNode, idl: webidl2.IDLTypeDescription): ts.TypeNode {
+  if (idl.nullable) {
+    return ts.factory.createUnionTypeNode([type, ts.factory.createLiteralTypeNode(ts.factory.createNull())])
+  }
+  return type
+}
+
 function convertType(idl: webidl2.IDLTypeDescription): ts.TypeNode {
   if (typeof idl.idlType === 'string') {
     const type = baseTypeConversionMap.get(idl.idlType) || idl.idlType
+
     switch (type) {
       case 'number':
-        return ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword)
+        return makeFinalType(ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword), idl)
       case 'string':
-        return ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword)
+        return makeFinalType(ts.factory.createKeywordTypeNode(ts.SyntaxKind.StringKeyword), idl)
       case 'void':
         return ts.factory.createKeywordTypeNode(ts.SyntaxKind.VoidKeyword)
       default:
-        return ts.factory.createTypeReferenceNode(type, [])
+        return makeFinalType(ts.factory.createTypeReferenceNode(type, []), idl)
     }
   }
+
   if (idl.generic) {
     const type = baseTypeConversionMap.get(idl.generic) || idl.generic
-    return ts.factory.createTypeReferenceNode(ts.factory.createIdentifier(type), idl.idlType.map(convertType))
+    const typeReferenceNode = ts.factory.createTypeReferenceNode(ts.factory.createIdentifier(type), idl.idlType.map(convertType))
+    return makeFinalType(typeReferenceNode, idl)
   }
+
   if (idl.union) {
     return ts.factory.createUnionTypeNode(idl.idlType.map(convertType))
   }

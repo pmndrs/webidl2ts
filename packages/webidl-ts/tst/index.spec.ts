@@ -89,6 +89,24 @@ describe('convert', () => {
     )
   })
 
+  it('support nullable types', async () => {
+    const idl = multiLine(
+      'interface Foo {', //
+      '    attribute long? bar;', //
+      '};', //
+    )
+
+    const ts = await convert(idl)
+
+    expect(ts).toBe(
+      multiLine(
+        'interface Foo {', //
+        '    bar: number | null;', //
+        '}', //
+      ),
+    )
+  })
+
   describe('emscripten', () => {
     it('supports unsigned integer arrays', async () => {
       const idl = multiLine(
