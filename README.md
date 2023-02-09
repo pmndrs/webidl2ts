@@ -1,1 +1,1 @@
-packages/webidl-to-ts/README.md
+packages/webidl-ts/README.md
