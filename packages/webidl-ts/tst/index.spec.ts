@@ -39,6 +39,24 @@ describe('convert', () => {
     )
   })
 
+  it('supports creating interfaces for namespaces', async () => {
+    const idl = multiLine(
+      'namespace Foo {', //
+      '    void bar();', //
+      '};', //
+    )
+
+    const ts = await convert(idl)
+
+    expect(ts).toBe(
+      multiLine(
+        'interface Foo {', //
+        '    bar(): void;', //
+        '}', //
+      ),
+    )
+  })
+
   describe('emscripten', () => {
     it('supports unsigned integer arrays', async () => {
       const idl = multiLine(
