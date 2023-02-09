@@ -38,4 +38,18 @@ describe('convert', () => {
       ),
     )
   })
+
+  describe('emscripten', () => {
+    it('supports unsigned integer arrays', async () => {
+      const idl = multiLine(
+        'interface Foo {', //
+        '    attribute unsigned long[] bar;', //
+        '};', //
+      )
+
+      const ts = await convert(idl, { emscripten: true })
+
+      expect(ts).toContain('bar: ReadonlyArray<number>;')
+    })
+  })
 })
