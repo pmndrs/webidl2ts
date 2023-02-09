@@ -1,44 +1,21 @@
 {
-  "name": "webidl2ts",
-  "version": "1.0.4",
-  "description": "Converts Web IDL to Typescript (.d.ts)",
-  "main": "dist/index.js",
-  "scripts": {
-    "build": "tsc && chmod 755 dist/cli.js",
-    "lint": "tsc --noEmit",
-    "start": "yarn build && ./dist/cli.js",
-    "format": "yarn prettier --write ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/giniedp/webidl2ts.git"
-  },
-  "homepage": "https://github.com/giniedp/webidl2ts",
-  "author": "Alexander Gräfenstein",
-  "license": "MIT",
-  "files": [
-    "dist",
-    "Readme.md",
-    "package.json",
-    "LICENSE.md"
-  ],
-  "devDependencies": {
-    "@types/node": "^14.14.6",
-    "@types/webidl2": "^23.13.5",
-    "@types/yargs": "^15.0.9",
-    "@typescript-eslint/eslint-plugin": "^4.6.1",
-    "@typescript-eslint/parser": "^4.6.1",
-    "eslint": "^7.12.1",
-    "prettier": "^2.1.2",
-    "ts-node": "^9.0.0"
-  },
-  "dependencies": {
-    "jsdom": "^16.4.0",
-    "typescript": "^4.0.5",
-    "webidl2": "^23.13.0",
-    "yargs": "^16.1.0"
-  },
-  "bin": {
-    "webidl2ts": "./dist/cli.js"
-  }
+    "name": "webidl2ts-monorepo",
+    "private": true,
+    "version": "0.0.0",
+    "license": "MIT",
+    "packageManager": "yarn@3.2.1",
+    "repository": "https://github.com/pmndrs/webidl2ts",
+    "devDependencies": {
+        "@changesets/cli": "^2.22.0"
+    },
+    "scripts": {
+        "build": "yarn workspaces run build",
+        "test": "(cd packages/p2-es && yarn test)",
+        "change": "yarn changeset",
+        "bump": "yarn changeset version && yarn install --mode update-lockfile",
+        "release": "yarn build && yarn test && changeset publish"
+    },
+    "workspaces": [
+        "packages/webidl2ts"
+    ]
 }

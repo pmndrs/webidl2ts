@@ -6,14 +6,8 @@ This tool generates a `.d.ts` file based on a WebIDL input file.
 
 use npm or yarn to install from npmjs
 
-```shell
-npm install webidl2ts
-```
-
-or from github
-
-```shell
-npm install github:giniedp/webidl2ts
+```sh
+npm install @pmndrs/webidl2ts
 ```
 
 # Usage
