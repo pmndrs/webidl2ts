@@ -171,7 +171,10 @@ function createIterableMethods(name: string, keyType: ts.TypeNode, valueType: ts
   ]
 }
 
-function convertInterface(idl: webidl2.InterfaceType | webidl2.DictionaryType | webidl2.InterfaceMixinType | webidl2.NamespaceType, options?: Options) {
+function convertInterface(
+  idl: webidl2.InterfaceType | webidl2.DictionaryType | webidl2.InterfaceMixinType | webidl2.NamespaceType,
+  options?: Options,
+) {
   const members: (ts.TypeElement | ts.ClassElement)[] = []
   const inheritance = []
   if ('inheritance' in idl && idl.inheritance) {
@@ -217,11 +220,30 @@ function convertInterface(idl: webidl2.InterfaceType | webidl2.DictionaryType | 
         }
         break
       }
+      case 'setlike':
+        inheritance.push(
+          ts.factory.createExpressionWithTypeArguments(ts.factory.createIdentifier(member.readonly ? 'ReadonlySet' : 'Set'), [
+            convertType(member.idlType[0]),
+          ]),
+        )
+        break
+      case 'maplike':
+        inheritance.push(
+          ts.factory.createExpressionWithTypeArguments(ts.factory.createIdentifier(member.readonly ? 'ReadonlyMap' : 'Map'), [
+            convertType(member.idlType[0]),
+            convertType(member.idlType[1]),
+          ]),
+        )
+        break
       default:
         console.log(newUnsupportedError('Unsupported IDL member', member))
         break
     }
   })
+
+  if (inheritance.length === 1 && !members.length) {
+    return ts.factory.createTypeAliasDeclaration(undefined, ts.factory.createIdentifier(idl.name), undefined, inheritance[0])
+  }
 
   if (options?.emscripten) {
     ts.factory.createClassDeclaration(

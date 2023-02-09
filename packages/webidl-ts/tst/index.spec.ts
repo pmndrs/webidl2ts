@@ -57,6 +57,38 @@ describe('convert', () => {
     )
   })
 
+  it('supports maplike declarations', async () => {
+    const idl = multiLine(
+      'interface Foo {', //
+      '    maplike<unsigned long, DOMString>;', //
+      '};', //
+    )
+
+    const ts = await convert(idl)
+
+    expect(ts).toBe(
+      multiLine(
+        'type Foo = Map<number, string>;', //
+      ),
+    )
+  })
+
+  it('supports setlike declarations', async () => {
+    const idl = multiLine(
+      'interface Foo {', //
+      '    setlike<unsigned long>;', //
+      '};', //
+    )
+
+    const ts = await convert(idl)
+
+    expect(ts).toBe(
+      multiLine(
+        'type Foo = Set<number>;', //
+      ),
+    )
+  })
+
   describe('emscripten', () => {
     it('supports unsigned integer arrays', async () => {
       const idl = multiLine(
