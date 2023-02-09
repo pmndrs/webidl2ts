@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "outDir": "../webidl-ts/dist",
+    "moduleResolution": "node",
+    "declaration": true,
+    "target": "es5",
+    "newLine": "LF",
+    "baseUrl": "../webidl-ts",
+    "typeRoots": ["../../node_modules/@types", "types"],
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["dist", "node_modules", "snapshots"]
+}

@@ -1,10 +1,10 @@
 {
-    "name": "webidl2ts-monorepo",
+    "name": "monorepo",
     "private": true,
     "version": "0.0.0",
     "license": "MIT",
     "packageManager": "yarn@3.2.1",
-    "repository": "https://github.com/pmndrs/webidl2ts",
+    "repository": "https://github.com/pmndrs/webidl-ts",
     "devDependencies": {
         "@changesets/cli": "^2.22.0"
     },
@@ -16,6 +16,6 @@
         "release": "yarn build && yarn test && changeset publish"
     },
     "workspaces": [
-        "packages/webidl2ts"
+        "packages/webidl-ts"
     ]
 }
