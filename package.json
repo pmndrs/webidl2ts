@@ -10,9 +10,10 @@
     },
     "scripts": {
         "build": "yarn workspaces run build",
+        "test": "yarn workspaces run test",
         "change": "yarn changeset",
         "bump": "yarn changeset version && yarn install --mode update-lockfile",
-        "release": "yarn build && changeset publish"
+        "release": "yarn build && yarn test && changeset publish"
     },
     "workspaces": [
         "packages/webidl-ts"

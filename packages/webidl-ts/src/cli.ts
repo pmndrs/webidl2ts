@@ -1,13 +1,10 @@
 #!/usr/bin/env node
 
-import * as yargs from 'yargs'
-import { parseIDL } from './parse-idl'
-import { convertIDL } from './convert-idl'
-import { printTs, printEmscriptenModule } from './print-ts'
 import * as fs from 'fs'
+import * as yargs from 'yargs'
+import { convert } from './convert'
 import { fetchIDL } from './fetch-idl'
-import { Options } from './types'
-import { fixes } from './fixes'
+import type { Options } from './types'
 
 async function main() {
   const argv = yargs
@@ -51,42 +48,24 @@ async function main() {
       boolean: true,
     }).argv
 
+  const input = argv.i as string
+  const output = argv.o as string
+
   const options: Options = {
-    input: argv.i as string,
-    output: argv.o as string,
     emscripten: argv.e,
     defaultExport: argv.d,
     module: argv.n,
   }
 
-  if (!options.input) {
+  if (!input) {
     process.exit(1)
   }
 
-  convert(options)
-}
+  const idlString = await fetchIDL(input)
 
-async function convert(options: Options) {
-  const idlString = await fetchIDL(options.input)
-  const idl = await parseIDL(idlString, {
-    preprocess: (idl: string) => {
-      if (options.emscripten) {
-        idl = fixes.inheritance(idl)
-        idl = fixes.array(idl)
-      }
-      return idl
-    },
-  })
-  const ts = convertIDL(idl, options)
+  const tsString = await convert(idlString, options)
 
-  let tsString: string = null
-  if (options.emscripten) {
-    tsString = printEmscriptenModule(options.module, ts, options.defaultExport)
-  } else {
-    tsString = printTs(ts)
-  }
-
-  fs.writeFileSync(options.output, tsString)
+  fs.writeFileSync(output, tsString)
 }
 
 main()
