@@ -4,7 +4,14 @@ import { parseIDL } from './parse-idl'
 import { printEmscriptenModule, printTs } from './print-ts'
 import { Options } from './types'
 
-export async function convert(idlString: string, options: Options = {}): Promise<string> {
+export async function convert(idlString: string, convertOptions: Options = {}): Promise<string> {
+  const options = {
+    emscripten: false,
+    module: 'Module',
+    defaultExport: false,
+    ...convertOptions,
+  }
+
   const idl = await parseIDL(idlString, {
     preprocess: (idl: string) => {
       if (options.emscripten) {
