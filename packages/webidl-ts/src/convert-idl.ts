@@ -263,7 +263,8 @@ function createAttributeSetter(value: webidl2.AttributeMemberType) {
 
 function convertMemberOperation(idl: webidl2.OperationMemberType) {
   const args = idl.arguments.map(convertArgument)
-  return ts.createMethodSignature([], args, convertType(idl.idlType), idl.name, undefined)
+  const modifiers = idl.special === 'static' ? ts.factory.createModifiersFromModifierFlags(ts.ModifierFlags.Static) : []
+  return ts.factory.createMethodSignature(modifiers, idl.name, undefined, [], args, convertType(idl.idlType))
 }
 
 function convertMemberConstructor(idl: webidl2.ConstructorMemberType | webidl2.OperationMemberType, options?: Options) {
