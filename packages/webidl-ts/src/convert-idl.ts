@@ -246,12 +246,13 @@ function convertInterface(
   }
 
   if (options?.emscripten) {
-    ts.factory.createClassDeclaration(
+    return ts.factory.createClassDeclaration(
       undefined,
+      [],
       ts.factory.createIdentifier(idl.name),
       undefined,
       !inheritance.length ? undefined : [ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, inheritance)],
-      members as ts.ClassElement[],
+      members as any, // TODO: fix hack - using ts.TypeElement[] instead of ts.ClassElement[]
     )
   }
 
