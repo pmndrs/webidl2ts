@@ -246,13 +246,17 @@ function convertInterface(
   }
 
   if (options?.emscripten) {
+    // todo: create ClassElements for emscripten instead of TypeElements.
+    // Using the new non-deprecated API for `createClassDeclaration` breaks as `members` `kind` fields are checked at runtime.
+    // https://github.com/microsoft/TypeScript/blob/release-4.8/src/deprecatedCompat/4.8/mergeDecoratorsAndModifiers.ts#L877
+    // https://github.com/microsoft/TypeScript/blob/35d76b0d384be90a4497a860140969f0d1fcf1bc/src/compiler/utilitiesPublic.ts#L1671
     return ts.factory.createClassDeclaration(
       undefined,
       [],
       ts.factory.createIdentifier(idl.name),
       undefined,
       !inheritance.length ? undefined : [ts.factory.createHeritageClause(ts.SyntaxKind.ExtendsKeyword, inheritance)],
-      members as any, // TODO: fix hack - using ts.TypeElement[] instead of ts.ClassElement[]
+      members as any,
     )
   }
 
