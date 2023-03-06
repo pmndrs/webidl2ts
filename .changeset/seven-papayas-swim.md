@@ -1,5 +1,5 @@
 ---
-"webidl-ts": patch
+"webidl-dts-gen": patch
 ---
 
 feat: support static operations

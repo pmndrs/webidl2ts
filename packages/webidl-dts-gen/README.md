@@ -1,6 +1,6 @@
-# webidl-ts
+# webidl-dts-gen
 
-`webidl-ts` is a  Web IDL to d.ts converter
+`webidl-dts-gen` is a  Web IDL to d.ts converter
 
 This tool generates a `.d.ts` file based on a WebIDL input file.
 
@@ -9,13 +9,13 @@ This tool generates a `.d.ts` file based on a WebIDL input file.
 # Installation
 
 ```sh
-npm install webidl-ts
+npm install webidl-dts-gen
 ```
 
 # Usage
 
 ```
-Usage: webidl-ts [options]
+Usage: webidl-dts-gen [options]
 
 Options:
   --version             Show version number  [boolean]
@@ -32,19 +32,19 @@ Options:
 Generate type definitions from a local idl file:
 
 ```
-webidl-ts -i my.idl -o index.d.ts
+webidl-dts-gen -i my.idl -o index.d.ts
 ```
 
 Use remote IDL files:
 
 ```
-webidl-ts -i https://www.khronos.org/registry/webgl/specs/latest/2.0/webgl2.idl -o webgl.d.ts
+webidl-dts-gen -i https://www.khronos.org/registry/webgl/specs/latest/2.0/webgl2.idl -o webgl.d.ts
 ```
 
 Generate type definitions from online documentation:
 
 ```
-webidl-ts -i https://www.w3.org/TR/webxr/ -o webxr.d.ts
+webidl-dts-gen -i https://www.w3.org/TR/webxr/ -o webxr.d.ts
 ```
 
 ## Definitions for emscripten modules
@@ -52,7 +52,7 @@ webidl-ts -i https://www.w3.org/TR/webxr/ -o webxr.d.ts
 Use the `-e` option to enable emscripten mode
 
 ```
-webidl-ts -e -i https://raw.githubusercontent.com/kripken/ammo.js/master/ammo.idl -o ammo.d.ts
+webidl-dts-gen -e -i https://raw.githubusercontent.com/kripken/ammo.js/master/ammo.idl -o ammo.d.ts
 ```
 
 # Usage in a project
@@ -63,8 +63,8 @@ This is an excerpt of a `package.json` with scripts to generate type definitions
 {
   "scripts": {
     "generate": "yarn generate:module && yarn generate:ambient",
-    "generate:module": "webidl-ts -i ./ammo.idl -n Ammo -ed -o ./builds/ammo.d.ts",
-    "generate:ambient": "webidl-ts -i ./ammo.idl -n Ammo  -e -o ./builds/ammo-ambient.d.ts"
+    "generate:module": "webidl-dts-gen -i ./ammo.idl -n Ammo -ed -o ./builds/ammo.d.ts",
+    "generate:ambient": "webidl-dts-gen -i ./ammo.idl -n Ammo  -e -o ./builds/ammo-ambient.d.ts"
   }
 }
 ```

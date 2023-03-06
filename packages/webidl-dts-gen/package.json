@@ -1,5 +1,5 @@
 {
-  "name": "webidl-ts",
+  "name": "webidl-dts-gen",
   "version": "0.0.1",
   "description": "Generates TypeScript modules (.d.ts) from WebIDL",
   "main": "dist/index.js",
@@ -13,9 +13,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pmndrs/webidl-ts.git"
+    "url": "https://github.com/pmndrs/webidl-dts-gen.git"
   },
-  "homepage": "https://github.com/pmndrs/webidl-ts",
+  "homepage": "https://github.com/pmndrs/webidl-dts-gen",
   "author": "Alexander Gräfenstein",
   "contributors": [
     "Isaac Mason <isaac@isaacmason.com> (https://github.com/isaac-mason)"
@@ -45,6 +45,6 @@
     "yargs": "^16.1.0"
   },
   "bin": {
-    "webidl-ts": "./dist/cli.js"
+    "webidl-dts-gen": "./dist/cli.js"
   }
 }

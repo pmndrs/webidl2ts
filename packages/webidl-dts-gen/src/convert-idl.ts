@@ -406,6 +406,6 @@ function newUnsupportedError(message: string, idl: unknown) {
   ${message}
   ${JSON.stringify(idl, null, 2)}
 
-  Please file an issue at https://github.com/pmndrs/webidl-ts and provide the used idl file or example.
+  Please file an issue at https://github.com/pmndrs/webidl-dts-gen and provide the used idl file or example.
 `)
 }

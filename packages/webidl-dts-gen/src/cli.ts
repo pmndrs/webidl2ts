@@ -9,7 +9,7 @@ import type { Options } from './types'
 async function main() {
   const argv = yargs
     .wrap(null)
-    .scriptName('webidl-ts')
+    .scriptName('webidl-dts-gen')
     .usage('Usage: $0 [options]')
     .example('$0 -i https://www.w3.org/TR/webxr/ -o webxr.d.ts', 'Generate from online documentation')
     .example('$0 -i https://www.khronos.org/registry/webgl/specs/latest/2.0/webgl2.idl -o webgl.d.ts', 'Generate from online idl file')

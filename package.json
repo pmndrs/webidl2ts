@@ -4,7 +4,7 @@
     "version": "0.0.0",
     "license": "MIT",
     "packageManager": "yarn@3.2.1",
-    "repository": "https://github.com/pmndrs/webidl-ts",
+    "repository": "https://github.com/pmndrs/webidl-dts-gen",
     "devDependencies": {
         "@changesets/cli": "^2.22.0"
     },
@@ -16,6 +16,6 @@
         "release": "yarn build && yarn test && changeset publish"
     },
     "workspaces": [
-        "packages/webidl-ts"
+        "packages/webidl-dts-gen"
     ]
 }
