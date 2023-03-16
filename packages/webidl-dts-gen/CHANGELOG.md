@@ -1,5 +1,11 @@
 # webidl-dts-gen
 
+## 0.0.3
+
+### Patch Changes
+
+- de70031: fix: stop using deprecated ts.factory.createClassDeclaration overload
+
 ## 0.0.2
 
 ### Patch Changes
