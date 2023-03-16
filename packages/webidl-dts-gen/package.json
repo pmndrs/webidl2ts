@@ -1,6 +1,6 @@
 {
   "name": "webidl-dts-gen",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Generates TypeScript modules (.d.ts) from WebIDL",
   "main": "dist/index.js",
   "scripts": {
