@@ -1,5 +1,11 @@
 # webidl-dts-gen
 
+## 1.0.1
+
+### Patch Changes
+
+- fix: README.md
+
 ## 1.0.0
 
 ### Major Changes
