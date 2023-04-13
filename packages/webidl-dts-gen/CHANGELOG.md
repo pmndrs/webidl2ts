@@ -1,5 +1,19 @@
 # webidl-dts-gen
 
+## 1.0.0
+
+### Major Changes
+
+- d682ec2: chore: release v1.0.0!
+
+### Minor Changes
+
+- acff4b1: chore(deps): bump typescript from 4.9.5 to 5.0.4
+
+### Patch Changes
+
+- 75633d0: chore(deps): bump webidl2 from 23.13.1 to 24.2.2
+
 ## 0.0.3
 
 ### Patch Changes
