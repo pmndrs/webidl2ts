@@ -46,7 +46,7 @@ async function main() {
       alias: 'default-export',
       default: false,
       boolean: true,
-    }).argv
+    }).parseSync()
 
   const input = argv.i as string
   const output = argv.o as string
