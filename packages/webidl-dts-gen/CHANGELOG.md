@@ -1,5 +1,11 @@
 # webidl-dts-gen
 
+## 1.0.2
+
+### Patch Changes
+
+- ede3f21: chore(deps): update yargs, jsdom, dev dependencies
+
 ## 1.0.1
 
 ### Patch Changes
