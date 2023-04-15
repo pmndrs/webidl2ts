@@ -107,141 +107,116 @@ describe('convert', () => {
     )
   })
 
-  describe('enums', () => {
-    it('converts enums to union types', async () => {
+  it('converts enums to union types', async () => {
+    const idl = multiLine(
+      'enum Foo {', //
+      '    "bar",', //
+      '    "baz"', //
+      '};', //
+    )
+
+    const ts = await convert(idl)
+
+    expect(ts).toBe(
+      multiLine(
+        'type Foo = "bar" | "baz";', //
+      ),
+    )
+  })
+
+  describe('emscripten', () => {
+    it('supports emscripten enums', async () => {
       const idl = multiLine(
         'enum Foo {', //
         '    "bar",', //
         '    "baz"', //
         '};', //
       )
-  
-      const ts = await convert(idl)
-  
+
+      const ts = await convert(idl, { emscripten: true })
+
       expect(ts).toBe(
-        multiLine(
-          'type Foo = "bar" | "baz";', //
+        withDefaultEmscriptenOutput(
+          'const bar: unknown;', //
+          'const baz: unknown;', //
+          'type Foo = typeof bar | typeof baz;', //
+          'function _emscripten_enum_Foo_bar(): Foo;', //
+          'function _emscripten_enum_Foo_baz(): Foo;', //
         ),
       )
     })
-  
-    describe('emscripten enabled', () => {
-      it('supports enums', async () => {
-        const idl = multiLine(
-          'enum Foo {', //
-          '    "bar",', //
-          '    "baz"', //
-          '};', //
-        )
-    
-        const ts = await convert(idl, { emscripten: true })
-    
-        expect(ts).toBe(
-          multiLine(
-            'declare function Module<T>(target?: T): Promise<T & typeof Module>;', //
-            'declare module Module {', //
-            '    function destroy(obj: any): void;', //
-            '    function _malloc(size: number): number;', //
-            '    function _free(ptr: number): void;', //
-            '    const HEAP8: Int8Array;', //
-            '    const HEAP16: Int16Array;', //
-            '    const HEAP32: Int32Array;', //
-            '    const HEAPU8: Uint8Array;', //
-            '    const HEAPU16: Uint16Array;', //
-            '    const HEAPU32: Uint32Array;', //
-            '    const HEAPF32: Float32Array;', //
-            '    const HEAPF64: Float64Array;', //
-            '    const bar: unknown;', //
-            '    const baz: unknown;', //
-            '    type Foo = typeof bar | typeof baz;', //
-            '    function _emscripten_enum_Foo_bar(): Foo;', //
-            '    function _emscripten_enum_Foo_baz(): Foo;', //
-            '}', //
-          ),
-        )
-      })
 
-      it('supports enums declared in namespaces', async () => {
-        const idl = multiLine(
-          'enum Foo {', //
-          '    "namespace::bar",', //
-          '    "namespace::baz"', //
-          '};', //
-        )
-    
-        const ts = await convert(idl, { emscripten: true })
-    
-        expect(ts).toBe(
-          multiLine(
-            'declare function Module<T>(target?: T): Promise<T & typeof Module>;', //
-            'declare module Module {', //
-            '    function destroy(obj: any): void;', //
-            '    function _malloc(size: number): number;', //
-            '    function _free(ptr: number): void;', //
-            '    const HEAP8: Int8Array;', //
-            '    const HEAP16: Int16Array;', //
-            '    const HEAP32: Int32Array;', //
-            '    const HEAPU8: Uint8Array;', //
-            '    const HEAPU16: Uint16Array;', //
-            '    const HEAPU32: Uint32Array;', //
-            '    const HEAPF32: Float32Array;', //
-            '    const HEAPF64: Float64Array;', //
-            '    const bar: unknown;', //
-            '    const baz: unknown;', //
-            '    type Foo = typeof bar | typeof baz;', //
-            '    function _emscripten_enum_Foo_bar(): Foo;', //
-            '    function _emscripten_enum_Foo_baz(): Foo;', //
-            '}', //
-          ),
-        )
-      })
-  
-      it('omits duplicate enum member names from the generated types', async () => {
-        const idl = multiLine(
-          'enum Foo {', //
-          '    "namespace::bar",', //
-          '    "namespace::baz"', //
-          '};', //
-          'enum Bar {', //
-          '    "namespace::bar",', //
-          '    "namespace::baz"', //
-          '};', //
-        )
-    
-        const ts = await convert(idl, { emscripten: true })
-    
-        expect(ts).toBe(
-          multiLine(
-            'declare function Module<T>(target?: T): Promise<T & typeof Module>;', //
-            'declare module Module {', //
-            '    function destroy(obj: any): void;', //
-            '    function _malloc(size: number): number;', //
-            '    function _free(ptr: number): void;', //
-            '    const HEAP8: Int8Array;', //
-            '    const HEAP16: Int16Array;', //
-            '    const HEAP32: Int32Array;', //
-            '    const HEAPU8: Uint8Array;', //
-            '    const HEAPU16: Uint16Array;', //
-            '    const HEAPU32: Uint32Array;', //
-            '    const HEAPF32: Float32Array;', //
-            '    const HEAPF64: Float64Array;', //
-            '    const bar: unknown;', //
-            '    const baz: unknown;', //
-            '    type Foo = typeof bar | typeof baz;', //
-            '    function _emscripten_enum_Foo_bar(): Foo;', //
-            '    function _emscripten_enum_Foo_baz(): Foo;', //
-            '    type Bar = typeof bar | typeof baz;', //
-            '    function _emscripten_enum_Bar_bar(): Bar;', //
-            '    function _emscripten_enum_Bar_baz(): Bar;', //
-            '}', //
-          ),
-        )
-      })
+    it('supports emscripten enums declared in namespaces', async () => {
+      const idl = multiLine(
+        'enum Foo {', //
+        '    "namespace::bar",', //
+        '    "namespace::baz"', //
+        '};', //
+      )
+
+      const ts = await convert(idl, { emscripten: true })
+
+      expect(ts).toBe(
+        withDefaultEmscriptenOutput(
+          'const bar: unknown;', //
+          'const baz: unknown;', //
+          'type Foo = typeof bar | typeof baz;', //
+          'function _emscripten_enum_Foo_bar(): Foo;', //
+          'function _emscripten_enum_Foo_baz(): Foo;', //
+        ),
+      )
     })
 
-  })
+    it('omits duplicate emscripten enum member names from the generated types', async () => {
+      const idl = multiLine(
+        'enum Foo {', //
+        '    "namespace::bar",', //
+        '    "namespace::baz"', //
+        '};', //
+        'enum Bar {', //
+        '    "namespace::bar",', //
+        '    "namespace::baz"', //
+        '};', //
+      )
 
-  describe('emscripten', () => {
+      const ts = await convert(idl, { emscripten: true })
+
+      expect(ts).toBe(
+        withDefaultEmscriptenOutput(
+          'const bar: unknown;', //
+          'const baz: unknown;', //
+          'type Foo = typeof bar | typeof baz;', //
+          'function _emscripten_enum_Foo_bar(): Foo;', //
+          'function _emscripten_enum_Foo_baz(): Foo;', //
+          'type Bar = typeof bar | typeof baz;', //
+          'function _emscripten_enum_Bar_bar(): Bar;', //
+          'function _emscripten_enum_Bar_baz(): Bar;', //
+        ),
+      )
+    })
+
+    it('supports implements', async () => {
+      const idl = multiLine(
+        'interface Foo {', //
+        '    void bar();', //
+        '};', //
+        'interface Baz {', //
+        '};', //
+        'Baz implements Foo;', //
+      )
+      const ts = await convert(idl, { emscripten: true })
+
+      expect(ts).toBe(
+        withDefaultEmscriptenOutput(
+          'class Foo {', //
+          '    bar(): void;', //
+          '}', //
+          'class Baz extends Foo {', //
+          '}', //
+        ),
+      )
+    })
+
     it('supports unsigned integer arrays', async () => {
       const idl = multiLine(
         'interface Foo {', //
@@ -255,3 +230,23 @@ describe('convert', () => {
     })
   })
 })
+
+function withDefaultEmscriptenOutput(...lines: string[]) {
+  return multiLine(
+    'declare function Module<T>(target?: T): Promise<T & typeof Module>;',
+    'declare module Module {',
+    '    function destroy(obj: any): void;',
+    '    function _malloc(size: number): number;',
+    '    function _free(ptr: number): void;',
+    '    const HEAP8: Int8Array;',
+    '    const HEAP16: Int16Array;',
+    '    const HEAP32: Int32Array;',
+    '    const HEAPU8: Uint8Array;',
+    '    const HEAPU16: Uint16Array;',
+    '    const HEAPU32: Uint32Array;',
+    '    const HEAPF32: Float32Array;',
+    '    const HEAPF64: Float64Array;',
+    ...lines.map((l) => `    ${l}`),
+    '}',
+  )
+}

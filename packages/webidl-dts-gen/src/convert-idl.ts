@@ -210,7 +210,7 @@ function convertInterface(
   options: Options,
 ) {
   const members: (ts.TypeElement | ts.ClassElement)[] = []
-  const inheritance = []
+  const inheritance: ts.ExpressionWithTypeArguments[] = []
   if ('inheritance' in idl && idl.inheritance) {
     inheritance.push(ts.factory.createExpressionWithTypeArguments(ts.factory.createIdentifier(idl.inheritance), undefined))
   }
@@ -275,8 +275,12 @@ function convertInterface(
     }
   })
 
+  // create a type alias if map or set is the only inheritance and there are no members 
   if (inheritance.length === 1 && !members.length) {
-    return ts.factory.createTypeAliasDeclaration(undefined, ts.factory.createIdentifier(idl.name), undefined, inheritance[0])
+    const [{ expression }] = inheritance
+    if (ts.isIdentifier(expression) && (['ReadonlyMap', 'Map', 'ReadonlySet', 'Set'].includes(expression.text))) {
+      return ts.factory.createTypeAliasDeclaration(undefined, ts.factory.createIdentifier(idl.name), undefined, inheritance[0])
+    }
   }
 
   if (options.emscripten) {
@@ -453,7 +457,7 @@ function convertEnum(idl: webidl2.EnumType, options: Options, emscriptenEnumMemb
   })
 
   // emscripten enums are exposed on the module their names, e.g. 'Module.MemberName'
-  // create a variable declaration for each enum member 
+  // create a variable declaration for each enum member
   const enumVariableDeclarations = memberNames
     .map((member) => {
       if (emscriptenEnumMembers.has(member)) {
