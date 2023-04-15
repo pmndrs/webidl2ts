@@ -1,5 +1,11 @@
 # webidl-dts-gen
 
+## 1.1.1
+
+### Patch Changes
+
+- c873687: feat: set emscripten enum variable declaration types to be 'any' instead of 'unknown'
+
 ## 1.1.0
 
 ### Minor Changes
