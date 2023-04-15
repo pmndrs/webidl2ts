@@ -472,7 +472,7 @@ function convertEnum(idl: webidl2.EnumType, options: Options, emscriptenEnumMemb
       const variableDeclaration = ts.factory.createVariableDeclaration(
         ts.factory.createIdentifier(member),
         undefined,
-        ts.factory.createTypeReferenceNode('unknown', undefined),
+        ts.factory.createTypeReferenceNode('any', undefined),
       )
 
       return ts.factory.createVariableStatement(
