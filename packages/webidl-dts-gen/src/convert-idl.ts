@@ -37,6 +37,8 @@ const baseTypeConversionMap = new Map<string, string>([
 export function convertIDL(rootTypes: webidl2.IDLRootType[], options: Options = {}): ts.Statement[] {
   const nodes: ts.Statement[] = []
 
+  const emscriptenEnumMembers: Set<string> = new Set()
+
   for (const rootType of rootTypes) {
     switch (rootType.type) {
       case 'interface':
@@ -69,7 +71,7 @@ export function convertIDL(rootTypes: webidl2.IDLRootType[], options: Options = 
         nodes.push(convertInterfaceIncludes(rootType))
         break
       case 'enum':
-        nodes.push(convertEnum(rootType))
+        nodes.push(...convertEnum(rootType, options, emscriptenEnumMembers))
         break
       case 'callback':
         nodes.push(convertCallback(rootType))
@@ -432,13 +434,70 @@ function convertType(idl: webidl2.IDLTypeDescription): ts.TypeNode {
   return ts.factory.createKeywordTypeNode(ts.SyntaxKind.UnknownKeyword)
 }
 
-function convertEnum(idl: webidl2.EnumType) {
-  return ts.factory.createTypeAliasDeclaration(
+function convertEnum(idl: webidl2.EnumType, options: Options, emscriptenEnumMembers: Set<string>) {
+  if (!options.emscripten) {
+    return [
+      ts.factory.createTypeAliasDeclaration(
+        undefined,
+        ts.factory.createIdentifier(idl.name),
+        undefined,
+        ts.factory.createUnionTypeNode(idl.values.map((it) => ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral(it.value)))),
+      ),
+    ]
+  }
+
+  const memberNames = idl.values.map((it) => {
+    // Strip the namespace from the member name if present, e.g. `EnumNamespace::` in "EnumNamespace::e_namespace_val"
+    // see: https://emscripten.org/docs/porting/connecting_cpp_and_javascript/WebIDL-Binder.html#enums
+    return it.value.replace(/.*::/, '')
+  })
+
+  // emscripten enums are exposed on the module their names, e.g. 'Module.MemberName'
+  // create a variable declaration for each enum member 
+  const enumVariableDeclarations = memberNames
+    .map((member) => {
+      if (emscriptenEnumMembers.has(member)) {
+        console.warn(
+          `Duplicate enum member name: '${member}'. Omitting duplicate from types. Enums in emscripten are exposed on the module their names, e.g. 'Module.MemberName', not 'Module.Enum.MemberName'.`,
+        )
+        return undefined
+      }
+
+      emscriptenEnumMembers.add(member)
+
+      const variableDeclaration = ts.factory.createVariableDeclaration(
+        ts.factory.createIdentifier(member),
+        undefined,
+        ts.factory.createTypeReferenceNode('unknown', undefined),
+      )
+
+      return ts.factory.createVariableStatement(
+        undefined,
+        ts.factory.createVariableDeclarationList([variableDeclaration], ts.NodeFlags.Const),
+      )
+    })
+    .filter(Boolean)
+
+  const enumVariableDeclarationsUnionType = ts.factory.createTypeAliasDeclaration(
     undefined,
     ts.factory.createIdentifier(idl.name),
     undefined,
-    ts.factory.createUnionTypeNode(idl.values.map((it) => ts.factory.createLiteralTypeNode(ts.factory.createStringLiteral(it.value)))),
+    ts.factory.createUnionTypeNode(memberNames.map((it) => ts.factory.createTypeReferenceNode(`typeof ${it}`, undefined))),
   )
+
+  const emscriptenInternalWrapperFunctions = memberNames.map((member) => {
+    return ts.factory.createFunctionDeclaration(
+      undefined,
+      undefined,
+      ts.factory.createIdentifier(`_emscripten_enum_${idl.name}_${member}`),
+      undefined,
+      [],
+      ts.factory.createTypeReferenceNode(idl.name, undefined),
+      undefined,
+    )
+  })
+
+  return [...enumVariableDeclarations, enumVariableDeclarationsUnionType, ...emscriptenInternalWrapperFunctions]
 }
 
 function convertCallback(idl: webidl2.CallbackType) {
