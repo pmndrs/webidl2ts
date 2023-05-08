@@ -1,5 +1,15 @@
 # webidl-dts-gen
 
+## 1.2.0
+
+### Minor Changes
+
+- cae15bf: fix: types for emscripten array attributes and getters
+
+### Patch Changes
+
+- 0999cd1: chore(deps): bump jsdom from 21.1.1 to 22.0.0
+
 ## 1.1.1
 
 ### Patch Changes
