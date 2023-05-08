@@ -205,6 +205,10 @@ function createIterableMethods(
   ]
 }
 
+function isFrozenArrayAttribute(member: webidl2.IDLInterfaceMemberType | webidl2.FieldType) {
+  return member.type === 'attribute' && member.idlType.generic === 'FrozenArray'
+}
+
 function convertInterface(
   idl: webidl2.InterfaceType | webidl2.DictionaryType | webidl2.InterfaceMixinType | webidl2.NamespaceType,
   options: Options,
@@ -219,10 +223,31 @@ function convertInterface(
     switch (member.type) {
       case 'attribute':
         if (options.emscripten) {
-          members.push(createAttributeGetter(member, options))
-          members.push(createAttributeSetter(member, options))
+          members.push(createEmscriptenAttributeGetter(member))
+          members.push(createEmscriptenAttributeSetter(member))
         }
-        members.push(convertMemberAttribute(member, options))
+
+        if (options.emscripten && isFrozenArrayAttribute(member)) {
+          // for emscripten array attributes, the value of the attribute is the first item in the array
+          members.push(
+            convertMemberAttribute(
+              {
+                type: member.type,
+                name: member.name,
+                special: member.special,
+                inherit: member.inherit,
+                readonly: member.readonly,
+                parent: member.parent,
+                extAttrs: member.extAttrs,
+                idlType: member.idlType.idlType[0] as webidl2.IDLTypeDescription,
+              },
+              options,
+            ),
+          )
+        } else {
+          members.push(convertMemberAttribute(member, options))
+        }
+
         break
       case 'operation':
         if (member.name === idl.name) {
@@ -275,10 +300,10 @@ function convertInterface(
     }
   })
 
-  // create a type alias if map or set is the only inheritance and there are no members 
+  // create a type alias if map or set is the only inheritance and there are no members
   if (inheritance.length === 1 && !members.length) {
     const [{ expression }] = inheritance
-    if (ts.isIdentifier(expression) && (['ReadonlyMap', 'Map', 'ReadonlySet', 'Set'].includes(expression.text))) {
+    if (ts.isIdentifier(expression) && ['ReadonlyMap', 'Map', 'ReadonlySet', 'Set'].includes(expression.text)) {
       return ts.factory.createTypeAliasDeclaration(undefined, ts.factory.createIdentifier(idl.name), undefined, inheritance[0])
     }
   }
@@ -316,22 +341,42 @@ function convertInterfaceIncludes(idl: webidl2.IncludesType) {
   )
 }
 
-function createAttributeGetter(value: webidl2.AttributeMemberType, { emscripten }: Options) {
+function createEmscriptenAttributeGetter(value: webidl2.AttributeMemberType) {
+  let idlType: webidl2.IDLTypeDescription
+  let parameters: ts.ParameterDeclaration[]
+
+  if (isFrozenArrayAttribute(value)) {
+    idlType = (value.idlType.idlType[0] as unknown as webidl2.IDLTypeDescription)
+    parameters = [
+      ts.factory.createParameterDeclaration(
+        [],
+        undefined,
+        'index',
+        undefined,
+        ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
+      ),
+    ]
+  } else {
+    idlType = value.idlType
+    parameters = []
+  }
+
   return createMethod({
     name: 'get_' + value.name,
-    type: convertType(value.idlType),
-    emscripten,
+    type: convertType(idlType),
+    parameters,
+    emscripten: true,
   })
 }
 
-function createAttributeSetter(value: webidl2.AttributeMemberType, { emscripten }: Options) {
+function createEmscriptenAttributeSetter(value: webidl2.AttributeMemberType) {
   const parameter = ts.factory.createParameterDeclaration([], undefined, value.name, undefined, convertType(value.idlType))
 
   return createMethod({
     name: 'set_' + value.name,
     type: ts.factory.createKeywordTypeNode(ts.SyntaxKind.VoidKeyword),
     parameters: [parameter],
-    emscripten: emscripten,
+    emscripten: true,
   })
 }
 
