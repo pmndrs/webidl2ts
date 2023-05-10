@@ -65,74 +65,22 @@ export function printEmscriptenModule(moduleName: string, nodes: ts.Statement[],
 function emscriptenAdditions() {
   const result: ts.Statement[] = []
 
-  // adds emscripten specific types
-  //
-  //     function destroy(obj: any): void;
-  result.push(
-    ts.factory.createFunctionDeclaration(
-      /* modifiers      */ [],
-      /* asteriskToken  */ undefined,
-      /* name           */ 'destroy',
-      /* typeParameters */ [],
-      /* parameters     */ [
-        ts.factory.createParameterDeclaration([], undefined, 'obj', undefined, ts.factory.createKeywordTypeNode(ts.SyntaxKind.AnyKeyword)),
-      ],
-      /* type           */ ts.factory.createKeywordTypeNode(ts.SyntaxKind.VoidKeyword),
-      /* body           */ undefined,
-    ),
-  )
+  // add emscripten function declarations
+  const emscriptenFunctionDeclarations = [
+    'function destroy(obj: any): void',
+    'function _malloc(size: number): number',
+    'function _free(ptr: number): void',
+    'function wrapPointer<C extends new (...args: any) => any>(ptr: number, Class: C): InstanceType<C>',
+    'function getPointer(obj: unknown): number',
+    'function castObject<C extends new (...args: any) => any>(object: unknown, Class: C): InstanceType<C>',
+    'function compare(object1: unknown, object2: unknown): boolean',
+  ].map((sourceText: string) => {
+    const sourceFile = ts.createSourceFile('', sourceText, ts.ScriptTarget.ESNext, false, ts.ScriptKind.TS)
+    return sourceFile.statements[0] as ts.FunctionDeclaration
+  })
 
-  // adds malloc function
-  //
-  //     function _malloc(size: number): number;
-  result.push(
-    ts.factory.createFunctionDeclaration(
-      // undefined,
-      undefined,
-      undefined,
-      ts.factory.createIdentifier('_malloc'),
-      undefined,
-      [
-        ts.factory.createParameterDeclaration(
-          // undefined,
-          undefined,
-          undefined,
-          ts.factory.createIdentifier('size'),
-          undefined,
-          ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
-          undefined,
-        ),
-      ],
-      ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
-      undefined,
-    ),
-  )
+  result.push(...emscriptenFunctionDeclarations)
 
-  // adds free function
-  //
-  //     function _free(size: number): number;
-  result.push(
-    ts.factory.createFunctionDeclaration(
-      // undefined,
-      undefined,
-      undefined,
-      ts.factory.createIdentifier('_free'),
-      undefined,
-      [
-        ts.factory.createParameterDeclaration(
-          // undefined,
-          undefined,
-          undefined,
-          ts.factory.createIdentifier('ptr'),
-          undefined,
-          ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
-          undefined,
-        ),
-      ],
-      ts.factory.createKeywordTypeNode(ts.SyntaxKind.VoidKeyword),
-      undefined,
-    ),
-  )
   // adds HEAP* properties
   const heaps = [
     ['HEAP8', Int8Array.name],
@@ -144,6 +92,7 @@ function emscriptenAdditions() {
     ['HEAPF32', Float32Array.name],
     ['HEAPF64', Float64Array.name],
   ]
+
   for (const [name, type] of heaps) {
     result.push(
       ts.factory.createVariableStatement(
@@ -161,5 +110,6 @@ function emscriptenAdditions() {
       ),
     )
   }
+
   return result
 }
