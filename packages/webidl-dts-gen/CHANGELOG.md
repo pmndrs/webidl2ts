@@ -1,5 +1,11 @@
 # webidl-dts-gen
 
+## 1.3.0
+
+### Minor Changes
+
+- 51dac39: feat: add missing emscripten function declarations
+
 ## 1.2.0
 
 ### Minor Changes
