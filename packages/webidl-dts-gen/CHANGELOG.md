@@ -1,5 +1,12 @@
 # webidl-dts-gen
 
+## 1.3.1
+
+### Patch Changes
+
+- 821b3ce: chore(deps): bump yargs from 17.7.1 to 17.7.2
+- 282e836: chore(deps): bump webidl2 from 24.2.2 to 24.3.0
+
 ## 1.3.0
 
 ### Minor Changes
