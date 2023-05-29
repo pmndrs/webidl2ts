@@ -41,7 +41,7 @@
   "dependencies": {
     "jsdom": "^22.0.0",
     "typescript": "^5.0.4",
-    "webidl2": "^24.2.2",
+    "webidl2": "^24.3.0",
     "yargs": "^17.7.1"
   },
   "bin": {
