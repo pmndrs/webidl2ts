@@ -195,6 +195,26 @@ describe('convert', () => {
       )
     })
 
+    it('supports non array attributes', async () => {
+      const idl = multiLine(
+        'interface Foo {', //
+        '    attribute float position;', //
+        '};', //
+      )
+
+      const ts = await convert(idl, { emscripten: true })
+
+      expect(ts).toBe(
+        withDefaultEmscriptenOutput(
+          'class Foo {', //
+          '    get_position(): number;', //
+          '    set_position(value: number): void;', //
+          '    position: number;', //
+          '}', //
+        ),
+      )
+    })
+
     it('supports array attributes', async () => {
       const idl = multiLine(
         'interface Foo {', //
@@ -208,7 +228,7 @@ describe('convert', () => {
         withDefaultEmscriptenOutput(
           'class Foo {', //
           '    get_position(index: number): number;', //
-          '    set_position(position: ReadonlyArray<number>): void;', //
+          '    set_position(index: number, value: number): void;', //
           '    position: number;', //
           '}', //
         ),

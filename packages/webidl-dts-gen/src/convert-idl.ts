@@ -370,12 +370,44 @@ function createEmscriptenAttributeGetter(value: webidl2.AttributeMemberType) {
 }
 
 function createEmscriptenAttributeSetter(value: webidl2.AttributeMemberType) {
-  const parameter = ts.factory.createParameterDeclaration([], undefined, value.name, undefined, convertType(value.idlType))
+  let idlType: webidl2.IDLTypeDescription
+  let parameters: ts.ParameterDeclaration[]
+
+  if (isFrozenArrayAttribute(value)) {
+    idlType = (value.idlType.idlType[0] as unknown as webidl2.IDLTypeDescription)
+    parameters = [
+      ts.factory.createParameterDeclaration(
+        [],
+        undefined,
+        'index',
+        undefined,
+        ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
+      ),
+      ts.factory.createParameterDeclaration(
+        [],
+        undefined,
+        'value',
+        undefined,
+        convertType(idlType),
+      ),
+    ]
+  } else {
+    idlType = value.idlType
+    parameters = [
+      ts.factory.createParameterDeclaration(
+        [],
+        undefined,
+        'value',
+        undefined,
+        convertType(idlType),
+      ),
+    ]
+  }
 
   return createMethod({
     name: 'set_' + value.name,
     type: ts.factory.createKeywordTypeNode(ts.SyntaxKind.VoidKeyword),
-    parameters: [parameter],
+    parameters,
     emscripten: true,
   })
 }
