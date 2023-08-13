@@ -1,5 +1,15 @@
 # webidl-dts-gen
 
+## 1.4.0
+
+### Minor Changes
+
+- a7dfc9f: fix: correct types for attribute 'set\_' setter function
+
+### Patch Changes
+
+- 8ef87f9: chore: bump jsdom
+
 ## 1.3.1
 
 ### Patch Changes
