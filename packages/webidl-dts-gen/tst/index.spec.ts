@@ -183,8 +183,8 @@ describe('convert', () => {
 
       expect(ts).toBe(
         withDefaultEmscriptenOutput(
-          'const bar: any;', //
-          'const baz: any;', //
+          'const bar: number;', //
+          'const baz: number;', //
           'type Foo = typeof bar | typeof baz;', //
           'function _emscripten_enum_Foo_bar(): Foo;', //
           'function _emscripten_enum_Foo_baz(): Foo;', //
