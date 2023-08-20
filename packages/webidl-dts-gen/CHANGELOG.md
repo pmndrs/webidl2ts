@@ -1,5 +1,11 @@
 # webidl-dts-gen
 
+## 1.5.0
+
+### Minor Changes
+
+- 3868ce5: fix: emscripten enum values should be numbers
+
 ## 1.4.0
 
 ### Minor Changes
