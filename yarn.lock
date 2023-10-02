@@ -1026,10 +1026,10 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
-"@types/webidl2@^23.13.6":
-  version "23.13.6"
-  resolved "https://registry.yarnpkg.com/@types/webidl2/-/webidl2-23.13.6.tgz#ac8d3da9814708ca8a84db3bce53cb9dc1469f68"
-  integrity sha512-sPMaZm2M7ZBaVnajY1WFszcl+6CR/daMt77dD8PpMH1wRKinRMDV40U55VmObJ58Oehu7K2JxmSonkm8BlbfxA==
+"@types/webidl2@^24.4.0":
+  version "24.4.0"
+  resolved "https://registry.yarnpkg.com/@types/webidl2/-/webidl2-24.4.0.tgz#ad9a9875253b4eddacb03b92d4e64973cbcccc53"
+  integrity sha512-7BcoEHyZBuvr6us686Sc+CQjtrQIlDQyV28mQ2jL0WmkJPN84C0eHQkDHQu+sIkuwiav4r5peivRutrYF5rKfA==
 
 "@types/yargs-parser@*":
   version "21.0.0"
@@ -4248,10 +4248,10 @@ webidl-conversions@^7.0.0:
   resolved "https://registry.yarnpkg.com/webidl-conversions/-/webidl-conversions-7.0.0.tgz#256b4e1882be7debbf01d05f0aa2039778ea080a"
   integrity sha512-VwddBukDzu71offAQR975unBIGqfKZpM+8ZX6ySk8nYhVoo5CYaZyzt3YBvYtRtO+aoGlqxPg/B87NGVZ/fu6g==
 
-webidl2@^24.3.0:
-  version "24.3.0"
-  resolved "https://registry.yarnpkg.com/webidl2/-/webidl2-24.3.0.tgz#50af3cdd03d37cc2670985c4366496a04ed08ce4"
-  integrity sha512-u42I31V2xQSBPCLtjFdk98cb06gTVnfPmq8eNDmcM3iaqtDdvY+GF5ZLPg3hEL/h6K50fsgPt+2YXFysSq8wcw==
+webidl2@^24.4.1:
+  version "24.4.1"
+  resolved "https://registry.yarnpkg.com/webidl2/-/webidl2-24.4.1.tgz#6c5d6ce24cf938e966673aca58704d979db4bc98"
+  integrity sha512-cPToqvZlxTAlaMucZyU28XtFLJz3XPdTdIWK/r3IaP1jfkjqne3OTniJS8DZqfzee1aBUQn80d6s2vYert50kg==
 
 whatwg-encoding@^2.0.0:
   version "2.0.0"
