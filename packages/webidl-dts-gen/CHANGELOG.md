@@ -1,5 +1,12 @@
 # webidl-dts-gen
 
+## 1.6.0
+
+### Minor Changes
+
+- cbf1668: chore: bump webidl2 from 24.3.0 to 24.4.1
+- 326ef99: chore: bump typescript from 5.1.3 to 5.2.2
+
 ## 1.5.0
 
 ### Minor Changes
