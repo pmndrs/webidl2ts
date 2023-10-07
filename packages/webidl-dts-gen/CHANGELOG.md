@@ -1,5 +1,11 @@
 # webidl-dts-gen
 
+## 1.7.0
+
+### Minor Changes
+
+- f52d614: feat: use webidl `value.name` for emscripten setter parameter name
+
 ## 1.6.0
 
 ### Minor Changes
