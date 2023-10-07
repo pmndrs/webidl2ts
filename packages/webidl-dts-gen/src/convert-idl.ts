@@ -386,7 +386,7 @@ function createEmscriptenAttributeSetter(value: webidl2.AttributeMemberType) {
       ts.factory.createParameterDeclaration(
         [],
         undefined,
-        'value',
+        value.name,
         undefined,
         convertType(idlType),
       ),
@@ -397,7 +397,7 @@ function createEmscriptenAttributeSetter(value: webidl2.AttributeMemberType) {
       ts.factory.createParameterDeclaration(
         [],
         undefined,
-        'value',
+        value.name,
         undefined,
         convertType(idlType),
       ),

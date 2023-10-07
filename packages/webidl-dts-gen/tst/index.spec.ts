@@ -208,7 +208,7 @@ describe('convert', () => {
         withDefaultEmscriptenOutput(
           'class Foo {', //
           '    get_position(): number;', //
-          '    set_position(value: number): void;', //
+          '    set_position(position: number): void;', //
           '    position: number;', //
           '}', //
         ),
@@ -228,7 +228,7 @@ describe('convert', () => {
         withDefaultEmscriptenOutput(
           'class Foo {', //
           '    get_position(index: number): number;', //
-          '    set_position(index: number, value: number): void;', //
+          '    set_position(index: number, position: number): void;', //
           '    position: number;', //
           '}', //
         ),
