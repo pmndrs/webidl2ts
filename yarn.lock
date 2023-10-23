@@ -1026,10 +1026,10 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
-"@types/webidl2@^24.4.0":
-  version "24.4.0"
-  resolved "https://registry.yarnpkg.com/@types/webidl2/-/webidl2-24.4.0.tgz#ad9a9875253b4eddacb03b92d4e64973cbcccc53"
-  integrity sha512-7BcoEHyZBuvr6us686Sc+CQjtrQIlDQyV28mQ2jL0WmkJPN84C0eHQkDHQu+sIkuwiav4r5peivRutrYF5rKfA==
+"@types/webidl2@^24.4.2":
+  version "24.4.2"
+  resolved "https://registry.yarnpkg.com/@types/webidl2/-/webidl2-24.4.2.tgz#bd9660cf11929e093cb9700e9de1194eac59c336"
+  integrity sha512-KQJU8mPHCbt4llL7xcQe2lQlFasYKL8QXezrDigtwOIfgWEvy7ioe7LoWyHnwBihxxxAcrWIBTcIbUbuuWaBDQ==
 
 "@types/yargs-parser@*":
   version "21.0.0"
