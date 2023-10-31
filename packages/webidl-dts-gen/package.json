@@ -29,7 +29,7 @@
   ],
   "devDependencies": {
     "@types/node": "^20.5.0",
-    "@types/webidl2": "^24.4.0",
+    "@types/webidl2": "^24.4.2",
     "@types/yargs": "^17.0.24",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.7.3",
