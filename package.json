@@ -3,14 +3,14 @@
     "private": true,
     "version": "0.0.0",
     "license": "MIT",
-    "packageManager": "yarn@3.2.1",
+    "packageManager": "yarn@4.0.2",
     "repository": "https://github.com/pmndrs/webidl-dts-gen",
     "devDependencies": {
         "@changesets/cli": "^2.26.2"
     },
     "scripts": {
-        "build": "yarn workspaces run build",
-        "test": "yarn workspaces run test",
+        "build": "yarn workspaces foreach -A -t --exclude monorepo run build",
+        "test": "yarn workspaces foreach -A -t --exclude monorepo run test",
         "change": "yarn changeset",
         "bump": "yarn changeset version && yarn install --mode update-lockfile",
         "release": "yarn build && yarn test && changeset publish"
