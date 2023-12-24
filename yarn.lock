@@ -1383,10 +1383,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/webidl2@npm:^24.4.2":
-  version: 24.4.2
-  resolution: "@types/webidl2@npm:24.4.2"
-  checksum: 66d4fa98aa5ea1dc4c82b0896eaee0d408644f960bd0b7a5defd52d467c9eb883070c1096e5b58effde074fd39466073d34f0ea4b3dd81acac046a866bde535f
+"@types/webidl2@npm:^24.4.3":
+  version: 24.4.3
+  resolution: "@types/webidl2@npm:24.4.3"
+  checksum: 42888ed22abfaaee0123eea8dbcfa67619ea80fdd3de8a1d8058f692ef9037a925a1dacb3e5ba4a5a5dd2259d47351fad9e04f19b878f031eabf63fb6a57137a
   languageName: node
   linkType: hard
 
@@ -6224,7 +6224,7 @@ __metadata:
   resolution: "webidl-dts-gen@workspace:packages/webidl-dts-gen"
   dependencies:
     "@types/node": "npm:^20.10.0"
-    "@types/webidl2": "npm:^24.4.2"
+    "@types/webidl2": "npm:^24.4.3"
     "@types/yargs": "npm:^17.0.29"
     "@typescript-eslint/eslint-plugin": "npm:^6.12.0"
     "@typescript-eslint/parser": "npm:^6.13.1"
