@@ -6,7 +6,7 @@
     "packageManager": "yarn@4.0.2",
     "repository": "https://github.com/pmndrs/webidl-dts-gen",
     "devDependencies": {
-        "@changesets/cli": "^2.26.2"
+        "@changesets/cli": "^2.27.1"
     },
     "scripts": {
         "build": "yarn workspaces foreach -A -t --exclude monorepo run build",
