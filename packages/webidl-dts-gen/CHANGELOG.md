@@ -1,5 +1,18 @@
 # webidl-dts-gen
 
+## 1.8.0
+
+### Minor Changes
+
+- 5697aec: fix: emscripten output for static methods
+
+  webidl-dts-gen was emitting c++ static methods as typescript static methods. Emscripten uses the static modifier for binding, but exposes the method on the prototype. This change makes webidl-dts-gen emit static methods as non-static methods so the types reflect the emscripten output.
+
+### Patch Changes
+
+- c3c8f58: chore(deps): bump jsdom from 23.0.1 to 24.0.0
+- c3c8f58: chore(deps): bump typescript from 5.2.2 to 5.3.3
+
 ## 1.7.0
 
 ### Minor Changes
