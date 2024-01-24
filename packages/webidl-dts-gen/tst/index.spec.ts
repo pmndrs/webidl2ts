@@ -268,6 +268,19 @@ describe('convert', () => {
 
       expect(ts).toContain('get_bar(index: number): number;')
     })
+
+    it('supports static methods', async () => {
+      const idl = multiLine(
+        'interface Foo {', //
+        '    [Value] static Quat sIdentity();', //
+        '};', //
+      )
+
+      const ts = await convert(idl, { emscripten: true })
+
+      expect(ts).toContain('sIdentity(): Quat;')
+      expect(ts).not.toContain('static sIdentity(): Quat;')
+    })
   })
 })
 
