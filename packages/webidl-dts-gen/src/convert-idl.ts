@@ -416,7 +416,8 @@ function convertMemberOperation(idl: webidl2.OperationMemberType, { emscripten }
   const parameters = idl.arguments.map(convertArgument)
   const modifiers: ts.Modifier[] = []
 
-  if (idl.special === 'static') {
+  // emscripten uses static for binding to c++, but exposes the method on the prototype
+  if (idl.special === 'static' && !emscripten) {
     modifiers.push(ts.factory.createModifier(ts.SyntaxKind.StaticKeyword))
   }
 
