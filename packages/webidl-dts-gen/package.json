@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "jsdom": "^24.0.0",
-    "typescript": "^5.3.3",
+    "typescript": "^5.4.2",
     "webidl2": "^24.4.1",
     "yargs": "^17.7.2"
   },
