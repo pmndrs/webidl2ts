@@ -281,6 +281,20 @@ describe('convert', () => {
       expect(ts).toContain('sIdentity(): Quat;')
       expect(ts).not.toContain('static sIdentity(): Quat;')
     })
+
+    it('supports correct types for JSImplementation', async () => {
+      const idl = multiLine(
+        '[JSImplementation="ShapeFilter"]', //
+        'interface ShapeFilterJS {', //
+        '  void ShapeFilterJS();', //
+        '  [Const] boolean ShouldCollide([Const] Shape inShape2, [Const, Ref] SubShapeID inSubShapeIDOfShape2);', //
+        '};', //
+      )
+
+      const ts = await convert(idl, { emscripten: true })
+
+      expect(ts).toContain('ShouldCollide(inShape2: number, inSubShapeIDOfShape2: number): boolean;')
+    })
   })
 })
 

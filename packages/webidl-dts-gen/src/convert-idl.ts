@@ -209,10 +209,9 @@ function isFrozenArrayAttribute(member: webidl2.IDLInterfaceMemberType | webidl2
   return member.type === 'attribute' && member.idlType.generic === 'FrozenArray'
 }
 
-function convertInterface(
-  idl: webidl2.InterfaceType | webidl2.DictionaryType | webidl2.InterfaceMixinType | webidl2.NamespaceType,
-  options: Options,
-) {
+type InterfaceIDL = webidl2.InterfaceType | webidl2.DictionaryType | webidl2.InterfaceMixinType | webidl2.NamespaceType
+
+function convertInterface(idl: InterfaceIDL, options: Options) {
   const members: (ts.TypeElement | ts.ClassElement)[] = []
   const inheritance: ts.ExpressionWithTypeArguments[] = []
   if ('inheritance' in idl && idl.inheritance) {
@@ -253,7 +252,7 @@ function convertInterface(
         if (member.name === idl.name) {
           members.push(convertMemberConstructor(member, options))
         } else {
-          members.push(convertMemberOperation(member, options))
+          members.push(convertMemberOperation(idl, member, options))
         }
         break
       case 'constructor':
@@ -346,7 +345,7 @@ function createEmscriptenAttributeGetter(value: webidl2.AttributeMemberType) {
   let parameters: ts.ParameterDeclaration[]
 
   if (isFrozenArrayAttribute(value)) {
-    idlType = (value.idlType.idlType[0] as unknown as webidl2.IDLTypeDescription)
+    idlType = value.idlType.idlType[0] as unknown as webidl2.IDLTypeDescription
     parameters = [
       ts.factory.createParameterDeclaration(
         [],
@@ -374,7 +373,7 @@ function createEmscriptenAttributeSetter(value: webidl2.AttributeMemberType) {
   let parameters: ts.ParameterDeclaration[]
 
   if (isFrozenArrayAttribute(value)) {
-    idlType = (value.idlType.idlType[0] as unknown as webidl2.IDLTypeDescription)
+    idlType = value.idlType.idlType[0] as unknown as webidl2.IDLTypeDescription
     parameters = [
       ts.factory.createParameterDeclaration(
         [],
@@ -383,25 +382,11 @@ function createEmscriptenAttributeSetter(value: webidl2.AttributeMemberType) {
         undefined,
         ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword),
       ),
-      ts.factory.createParameterDeclaration(
-        [],
-        undefined,
-        value.name,
-        undefined,
-        convertType(idlType),
-      ),
+      ts.factory.createParameterDeclaration([], undefined, value.name, undefined, convertType(idlType)),
     ]
   } else {
     idlType = value.idlType
-    parameters = [
-      ts.factory.createParameterDeclaration(
-        [],
-        undefined,
-        value.name,
-        undefined,
-        convertType(idlType),
-      ),
-    ]
+    parameters = [ts.factory.createParameterDeclaration([], undefined, value.name, undefined, convertType(idlType))]
   }
 
   return createMethod({
@@ -412,8 +397,10 @@ function createEmscriptenAttributeSetter(value: webidl2.AttributeMemberType) {
   })
 }
 
-function convertMemberOperation(idl: webidl2.OperationMemberType, { emscripten }: Options) {
-  const parameters = idl.arguments.map(convertArgument)
+function convertMemberOperation(parent: InterfaceIDL, idl: webidl2.OperationMemberType, { emscripten }: Options) {
+  const emscriptenJSImplementationMethod = emscripten && parent.extAttrs.some((attr) => attr.name === 'JSImplementation')
+
+  const parameters = idl.arguments.map(emscriptenJSImplementationMethod ? convertEmscriptenJSImplementationArgument : convertArgument)
   const modifiers: ts.Modifier[] = []
 
   // emscripten uses static for binding to c++, but exposes the method on the prototype
@@ -477,6 +464,14 @@ function convertArgument(idl: webidl2.Argument) {
   const optional = idl.optional ? ts.factory.createToken(ts.SyntaxKind.QuestionToken) : undefined
 
   return ts.factory.createParameterDeclaration([], undefined, idl.name, optional, convertType(idl.idlType))
+}
+
+function convertEmscriptenJSImplementationArgument(idl: webidl2.Argument) {
+  // JSImplementation method arguments are currently only passed as numeric types and pointers
+  // May need to change this to support DOMString in future: https://github.com/emscripten-core/emscripten/issues/10705
+  const numberType = makeFinalType(ts.factory.createKeywordTypeNode(ts.SyntaxKind.NumberKeyword), idl.idlType)
+
+  return ts.factory.createParameterDeclaration([], undefined, idl.name, undefined, numberType)
 }
 
 function makeFinalType(type: ts.TypeNode, idl: webidl2.IDLTypeDescription): ts.TypeNode {
