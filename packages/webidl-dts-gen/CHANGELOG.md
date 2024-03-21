@@ -1,5 +1,11 @@
 # webidl-dts-gen
 
+## 1.9.0
+
+### Minor Changes
+
+- 7b949de: fix: correct types for emscripten JSImplementation method arguments
+
 ## 1.8.0
 
 ### Minor Changes
