@@ -328,8 +328,11 @@ describe('convert', () => {
       expect(ts).not.toContain('static sIdentity(): Quat;')
     })
 
-    it('supports correct types for JSImplementation', async () => {
+    it('emits correct types for JSImplementation', async () => {
       const idl = multiLine(
+        'interface ShapeFilter {', //
+        '    void ShapeFilter();', //
+        '};', //
         '[JSImplementation="ShapeFilter"]', //
         'interface ShapeFilterJS {', //
         '  void ShapeFilterJS();', //
@@ -339,6 +342,8 @@ describe('convert', () => {
 
       const ts = await convert(idl, { emscripten: true })
 
+      expect(ts).toContain('class ShapeFilter {')
+      expect(ts).toContain('class ShapeFilterJS extends ShapeFilter {')
       expect(ts).toContain('ShouldCollide(inShape2: number, inSubShapeIDOfShape2: number): boolean;')
     })
   })

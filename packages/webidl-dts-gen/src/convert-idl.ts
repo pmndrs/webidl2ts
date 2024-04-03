@@ -212,11 +212,20 @@ function isFrozenArrayAttribute(member: webidl2.IDLInterfaceMemberType | webidl2
 type InterfaceIDL = webidl2.InterfaceType | webidl2.DictionaryType | webidl2.InterfaceMixinType | webidl2.NamespaceType
 
 function convertInterface(idl: InterfaceIDL, options: Options) {
+  const emscriptenJSImplementation = options.emscripten && idl.extAttrs.find((attr) => attr.name === 'JSImplementation')
+
   const members: (ts.TypeElement | ts.ClassElement)[] = []
 
   const inheritance: ts.ExpressionWithTypeArguments[] = []
+
   if ('inheritance' in idl && idl.inheritance) {
     inheritance.push(ts.factory.createExpressionWithTypeArguments(ts.factory.createIdentifier(idl.inheritance), undefined))
+  }
+
+  if (emscriptenJSImplementation) {
+    let attributeValue = emscriptenJSImplementation.rhs.value as string
+    attributeValue = attributeValue.replace(/^"(.*)"$/, '$1')
+    inheritance.push(ts.factory.createExpressionWithTypeArguments(ts.factory.createIdentifier(attributeValue), undefined))
   }
 
   idl.members.forEach((member: webidl2.IDLInterfaceMemberType | webidl2.FieldType) => {
@@ -253,7 +262,7 @@ function convertInterface(idl: InterfaceIDL, options: Options) {
         if (member.name === idl.name) {
           members.push(convertMemberConstructor(member, options))
         } else {
-          members.push(convertMemberOperation(idl, member, options))
+          members.push(convertMemberOperation(member, !!emscriptenJSImplementation, options))
         }
         break
       case 'constructor':
@@ -398,10 +407,8 @@ function createEmscriptenAttributeSetter(value: webidl2.AttributeMemberType) {
   })
 }
 
-function convertMemberOperation(parent: InterfaceIDL, idl: webidl2.OperationMemberType, { emscripten }: Options) {
-  const emscriptenJSImplementationMethod = emscripten && parent.extAttrs.some((attr) => attr.name === 'JSImplementation')
-
-  const parameters = idl.arguments.map(emscriptenJSImplementationMethod ? convertEmscriptenJSImplementationArgument : convertArgument)
+function convertMemberOperation(idl: webidl2.OperationMemberType, isEmscriptenJSImplementation: boolean, { emscripten }: Options) {
+  const parameters = idl.arguments.map(isEmscriptenJSImplementation ? convertEmscriptenJSImplementationArgument : convertArgument)
   const modifiers: ts.Modifier[] = []
 
   // emscripten uses static for binding to c++, but exposes the method on the prototype
