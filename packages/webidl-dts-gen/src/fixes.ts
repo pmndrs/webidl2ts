@@ -11,6 +11,8 @@ export const fixes = {
     //
     //      LEFT implements RIGHT;
     //
+    // ignore commented out lines
+    //
     // and comment them out
     // then replace all occurence
     //
@@ -20,14 +22,26 @@ export const fixes = {
     //
     //      interface LEFT: RIGHT {
     //
+    // Handle inheritance
     const inheritance = []
-    idlString = idlString.replace(/([a-zA-Z0-9]+) implements ([a-zA-Z0-9]+);/gi, (line, left, right) => {
-      inheritance.push({ left, right })
-      return `// ${line}`
-    })
+
+    idlString = idlString.replace(
+      /(\/\*[\s\S]*?\*\/|\/\/.*?$)|([a-zA-Z0-9]+) implements ([a-zA-Z0-9]+);/gi,
+      (line, comment, left, right) => {
+        if (comment) {
+          return line
+        }
+
+        inheritance.push({ left, right })
+        return `// ${line}`
+      },
+    )
+
+    // Update interfaces with inheritance
     inheritance.forEach(({ left, right }) => {
       idlString = idlString.replace(new RegExp(`interface ${left} {`), `interface ${left}: ${right} {`)
     })
+
     return idlString
   },
 

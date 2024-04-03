@@ -213,6 +213,7 @@ type InterfaceIDL = webidl2.InterfaceType | webidl2.DictionaryType | webidl2.Int
 
 function convertInterface(idl: InterfaceIDL, options: Options) {
   const members: (ts.TypeElement | ts.ClassElement)[] = []
+
   const inheritance: ts.ExpressionWithTypeArguments[] = []
   if ('inheritance' in idl && idl.inheritance) {
     inheritance.push(ts.factory.createExpressionWithTypeArguments(ts.factory.createIdentifier(idl.inheritance), undefined))

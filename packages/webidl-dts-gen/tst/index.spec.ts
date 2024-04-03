@@ -257,6 +257,52 @@ describe('convert', () => {
       )
     })
 
+    it('ignores commented out "implements" expressions', async () => {
+      const idl = multiLine(
+        'interface Foo {', //
+        '    void bar();', //
+        '};', //
+        'interface Baz {', //
+        '};', //
+        '//Baz implements Foo;', //
+      )
+      const ts = await convert(idl, { emscripten: true })
+
+      expect(ts).toBe(
+        withDefaultEmscriptenOutput(
+          'class Foo {', //
+          '    bar(): void;', //
+          '}', //
+          'class Baz {', //
+          '}', //
+        ),
+      )
+    })
+
+    it('ignores multiline commented out "implements" expressions', async () => {
+      const idl = multiLine(
+        'interface Foo {', //
+        '    void bar();', //
+        '};', //
+        'interface Baz {', //
+        '};', //
+        '/*', //
+        'Baz implements Foo;', //
+        '*/', //
+      )
+      const ts = await convert(idl, { emscripten: true })
+
+      expect(ts).toBe(
+        withDefaultEmscriptenOutput(
+          'class Foo {', //
+          '    bar(): void;', //
+          '}', //
+          'class Baz {', //
+          '}', //
+        ),
+      )
+    })
+
     it('supports unsigned integer arrays', async () => {
       const idl = multiLine(
         'interface Foo {', //
