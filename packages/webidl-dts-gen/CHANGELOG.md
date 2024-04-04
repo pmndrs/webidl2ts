@@ -1,5 +1,15 @@
 # webidl-dts-gen
 
+## 1.10.0
+
+### Minor Changes
+
+- b4f6cc6: feat(emscripten): generate types with inheritance for emscripten JSImplementation interfaces
+
+### Patch Changes
+
+- 211220b: fix(emscripten): don't apply emscripten inheritance fix for commented inheritance statements
+
 ## 1.9.0
 
 ### Minor Changes
