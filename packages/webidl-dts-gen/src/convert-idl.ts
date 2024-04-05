@@ -222,7 +222,7 @@ function convertInterface(idl: InterfaceIDL, options: Options) {
     inheritance.push(ts.factory.createExpressionWithTypeArguments(ts.factory.createIdentifier(idl.inheritance), undefined))
   }
 
-  if (emscriptenJSImplementation) {
+  if (emscriptenJSImplementation && inheritance.length === 0) {
     let attributeValue = emscriptenJSImplementation.rhs.value as string
     attributeValue = attributeValue.replace(/^"(.*)"$/, '$1')
     inheritance.push(ts.factory.createExpressionWithTypeArguments(ts.factory.createIdentifier(attributeValue), undefined))

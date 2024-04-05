@@ -346,6 +346,38 @@ describe('convert', () => {
       expect(ts).toContain('class ShapeFilterJS extends ShapeFilter {')
       expect(ts).toContain('ShouldCollide(inShape2: number, inSubShapeIDOfShape2: number): boolean;')
     })
+
+    it('implements statement should take precedence over JSImplementation for inheritance', async () => {
+      const idl = multiLine(
+        'interface PathConstraintPath {',
+        '  boolean IsLooping();',
+        '  void SetIsLooping(boolean inIsLooping);',
+        '  unsigned long GetRefCount();',
+        '  void AddRef();',
+        '  void Release();',
+        '};',
+        '',
+        'interface PathConstraintPathEm {',
+        '};',
+        '',
+        'PathConstraintPathJS implements PathConstraintPath;',
+        '',
+        '[JSImplementation="PathConstraintPathEm"]',
+        'interface PathConstraintPathJS {',
+        '  [Const] void PathConstraintPathJS();',
+        '  [Const] float GetPathMaxFraction();',
+        '  [Const] float GetClosestPoint([Const] Vec3 inPosition, float inFractionHint);',
+        '  [Const] void GetPointOnPath(float inFraction, Vec3 outPathPosition, Vec3 outPathTangent, Vec3 outPathNormal, Vec3 outPathBinormal);',
+        '};',
+      )
+
+      const ts = await convert(idl, { emscripten: true })
+
+      console.log(ts)
+
+      expect(ts).toContain('class PathConstraintPath {')
+      expect(ts).toContain('class PathConstraintPathJS extends PathConstraintPath {')
+    })
   })
 })
 
