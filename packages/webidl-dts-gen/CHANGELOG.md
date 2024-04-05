@@ -1,5 +1,11 @@
 # webidl-dts-gen
 
+## 1.11.0
+
+### Minor Changes
+
+- faceb27: fix(emscripten): implements statement should take precedence over JSImplementation for inheritance
+
 ## 1.10.0
 
 ### Minor Changes
