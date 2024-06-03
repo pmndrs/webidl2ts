@@ -28,7 +28,7 @@
     "LICENSE.md"
   ],
   "devDependencies": {
-    "@types/node": "^20.11.28",
+    "@types/node": "^20.12.12",
     "@types/webidl2": "^24.4.3",
     "@types/yargs": "^17.0.32",
     "@typescript-eslint/eslint-plugin": "^7.10.0",
