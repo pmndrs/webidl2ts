@@ -1,5 +1,11 @@
 # webidl-dts-gen
 
+## 1.11.1
+
+### Patch Changes
+
+- e6b0a7c: feat: make inheritance emscripten fix more robust
+
 ## 1.11.0
 
 ### Minor Changes
