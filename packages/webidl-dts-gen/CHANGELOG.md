@@ -1,5 +1,12 @@
 # webidl-dts-gen
 
+## 1.11.2
+
+### Patch Changes
+
+- 125bdf5: feat: bump jsdom from 24.0.0 to 25.0.0
+- 125bdf5: feat: bump typescript from 5.4.2 to 5.6.2
+
 ## 1.11.1
 
 ### Patch Changes
