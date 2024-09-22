@@ -25,19 +25,32 @@ export const fixes = {
     // Handle inheritance
     const inheritance = []
 
-    idlString = idlString.replace(
-      /(\/\*[\s\S]*?\*\/|\/\/.*?$)|([a-zA-Z0-9]+) implements ([a-zA-Z0-9]+);/gi,
-      (line, comment, left, right) => {
-        if (comment) {
-          return line
-        }
+    // remove comments
+    const withoutComments = idlString.replace(/(\/\*[\s\S]*?\*\/|\/\/.*?$)/gm, '')
 
-        inheritance.push({ left, right })
-        return `// ${line}`
-      },
-    )
+    const lines = withoutComments.split('\n')
 
-    // Update interfaces with inheritance
+    // find lines with inheritance statements, comment them out and store them
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i]
+
+      const match = /([a-zA-Z0-9]+) implements ([a-zA-Z0-9]+);/gi.exec(line)
+
+      if (!match) {
+        continue
+      }
+
+      const left = match[1]
+      const right = match[2]
+
+      inheritance.push({ left, right })
+
+      lines[i] = `// ${line}`
+    }
+
+    idlString = lines.join('\n')
+
+    // correct inheritance syntax
     inheritance.forEach(({ left, right }) => {
       idlString = idlString.replace(new RegExp(`interface ${left} {`), `interface ${left}: ${right} {`)
     })
