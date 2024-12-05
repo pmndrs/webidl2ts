@@ -34,7 +34,7 @@ export const fixes = {
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i]
 
-      const match = /([a-zA-Z0-9]+) implements ([a-zA-Z0-9]+);/gi.exec(line)
+      const match = /([a-zA-Z0-9_]+) implements ([a-zA-Z0-9_]+);/gi.exec(line)
 
       if (!match) {
         continue
