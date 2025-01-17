@@ -10,8 +10,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check-changes:
-    name: Check for Changes
+  github-release:
+    name: Release on github
     runs-on: ubuntu-latest
     outputs:
       hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
@@ -31,8 +31,8 @@ jobs:
 
   npm-release:
     name: Publish to npm
-    needs: check-changes
-    if: needs.check-changes.outputs.hasChangesets == 'true' && github.repository_owner == 'pmndrs'
+    needs: github-release
+    if: needs.github-release.outputs.hasChangesets == 'true' && github.repository_owner == 'pmndrs'
     runs-on: ubuntu-latest
     steps:
       - uses: ./.github/actions/setup
