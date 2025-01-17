@@ -17,7 +17,7 @@ jobs:
       hasChangesets: ${{ steps.changesets.outputs.hasChangesets }}
       changes: ${{ steps.changesets.outputs.changes }}
     steps:
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup.yml
         
       - name: Version and Create PR
         id: changesets
@@ -35,7 +35,7 @@ jobs:
     if: needs.github-release.outputs.hasChangesets == 'true' && github.repository_owner == 'pmndrs'
     runs-on: ubuntu-latest
     steps:
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup.yml
         
       - name: Publish to npm
         run: yarn release
