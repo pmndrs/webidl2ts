@@ -253,6 +253,29 @@ describe('convert', () => {
       await expectSourceToBeEqual(actual, expected)
     })
 
+    it('supports "implements" identifiers with underscores', async () => {
+      const idl = `
+        interface Foo_Bar {
+            void bar();
+        };
+        interface Baz_Bal {
+        };
+        Baz_Bal implements Foo_Bar;
+      `
+
+      const actual = await convert(idl, { emscripten: true })
+
+      const expected = withDefaultEmscriptenOutput(`
+        class Foo_Bar {
+            bar(): void;
+        }
+        class Baz_Bal extends Foo_Bar {
+        }
+      `)
+
+      await expectSourceToBeEqual(actual, expected)
+    })
+
     it('ignores commented out "implements" expressions', async () => {
       const idl = `
         interface Foo {
